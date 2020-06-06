@@ -15,7 +15,7 @@ export const StravaList = () => {
 
     const activityEffect = useEffect(() => {
         if (isTokenValid) {
-            fetch("https://www.strava.com/api/v3/athlete/activities", {
+            fetch("https://www.strava.com/api/v3/athlete/activities?before=1563148740&after=1562544000", {
                 method: "GET",
                 headers: {
                     "Authorization": "Bearer " + accessToken
