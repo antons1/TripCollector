@@ -1,11 +1,17 @@
 import React, { useEffect, useState } from 'react';
 
-import { useOauth } from './useOauth';
+import { useOauth } from './oauth/useOauth';
 
 export const StravaList = () => {
     const [activities, setActivities] = useState([]);
 
-    const { accessToken, isTokenValid, fetchingToken, setTokenBecameInvalid } = useOauth();
+    const { accessToken, isTokenValid, fetchingToken, setTokenBecameInvalid } = useOauth("Strava", {
+        clientId: 49296,
+        clientSecret: "77c608a4ebca1bdf9abc556970d98d333d8ae7fa",
+        loginUrl: "https://www.strava.com/oauth/authorize",
+        authUrl: "https://www.strava.com/oauth/token",
+        scopes: "read,activity:read"
+    });
 
     const activityEffect = useEffect(() => {
         if (isTokenValid) {
