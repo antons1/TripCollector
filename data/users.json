@@ -1,0 +1,19 @@
+[
+    {
+        "id": "01d554b7-05f2-4080-adf8-78436859902c",
+        "name": "Håkon Antonsen",
+        "tripIds": [
+            "3b9c13bf-4568-48b7-8d95-90fade57fcc6"
+        ],
+        "connectionIds": [
+            "9aa97975-8300-4e4f-9b6f-146f310141e1",
+            "d18fabfc-a66a-45b1-b44e-bb0911513ed4"
+        ],
+        "pointIds": [
+            "bbbd0856-4fc6-4cad-9770-893f5d88bcd3",
+            "a8600c2b-b34e-44e7-b3dc-24a5f59fbc8d"
+        ],
+        "email": "haakon@antons1.net",
+        "location": "Norway"
+    }
+]

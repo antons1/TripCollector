@@ -1,0 +1,24 @@
+[
+    {
+        "id": "9aa97975-8300-4e4f-9b6f-146f310141e1",
+        "sourceId": "2a5ff69d-5cd1-4fd0-b037-7f6d06be28c4",
+        "userId": "",
+        "accessToken": null,
+        "refreshToken": null,
+        "expiresAt": null,
+        "pointIds": [
+            "bbbd0856-4fc6-4cad-9770-893f5d88bcd3"
+        ]
+    },
+    {
+        "id": "d18fabfc-a66a-45b1-b44e-bb0911513ed4",
+        "sourceId": "bbbd0856-4fc6-4cad-9770-893f5d88bcd3",
+        "userId": "",
+        "accessToken": null,
+        "refreshToken": null,
+        "expiresAt": null,
+        "pointIds": [
+            "a8600c2b-b34e-44e7-b3dc-24a5f59fbc8d"
+        ]
+    }
+]
