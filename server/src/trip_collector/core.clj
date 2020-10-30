@@ -1,29 +1,29 @@
 (ns trip-collector.core
-  (:require [compojure.core :refer :all]
-            [compojure.route :as route]
-            [ring.middleware.defaults :refer [wrap-defaults site-defaults]]
-            [ring.adapter.jetty :as j]
-            [jumblerg.middleware.cors :refer [wrap-cors]])
+  (:require [ring.adapter.jetty :as j]
+            [trip-collector.db :refer [connection! disconnect!]]
+            [trip-collector.routes :refer [app]])
   (:gen-class))
 
-(defroutes app-routes
-  (GET "/" [] "Hello World")
-  (route/not-found "Not Found"))
+(defonce server (atom nil))
 
-(def app
-  (-> app-routes
-    (wrap-cors #".*")
-    (wrap-defaults site-defaults)))
+(defn start! []
+  (reset! server (j/run-jetty #'app {:port 3000 :join? false})))
+
+(defn stop! []
+  (.stop @server))
 
 (defn run-app []
-  (j/run-jetty #'app { :port 3000 :join? false}))
+  (connection!)
+  (start!))
 
-(defn stop-app [server]
-  (.stop server))
+(defn stop-app []
+  (disconnect!)
+  (stop!))
 
 (defn -main [& args]
   (run-app))
 
 (comment
-  (def server (run-app))
-  (stop-app server))
+  (run-app)
+  (stop-app)
+  @server)
