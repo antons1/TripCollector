@@ -1,17 +1,35 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
+import { config } from './config/config';
+
 
 const App = () => {
-    const [msg, setMsg] = React.useState("");
+    const [msg, setMsg] = React.useState({});
+    const [loading, setLoading] = React.useState(false);
+    const [error, setError] = React.useState();
+
+    const conf = config();
+
     React.useEffect(() => {
-        fetch('http://localhost:3000/').then((res) => res.text()).then((res) => setMsg(res)).catch((err) => setMsg(err));
+        setLoading(true);
+        fetch(`//${conf.backend.host}:${conf.backend.port}/api/articles`).then((res) => res.json()).then((res) => {
+            setMsg(res);
+            setLoading(false);
+        }).catch((err) => {
+            setError(err);
+            setLoading(false);
+        });
     }, [])
+
+    const { title, author } = msg;
 
     return (
         <div>
-            <h1>Hello</h1>
-            <pre>{msg}</pre>
+            {loading && <pre>Laster...</pre>}
+            {title && <h1>{title}</h1>}
+            {author && <pre>By {author}</pre>}
+            {error && <pre>{error}</pre>}
         </div>
     );
 }
