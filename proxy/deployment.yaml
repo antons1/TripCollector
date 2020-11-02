@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: trip-collector-proxy
+  labels:
+    app: trip-collector
+    part: trip-collector-proxy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: trip-collector
+      part: trip-collector-proxy
+  template:
+    metadata:
+      labels:
+        app: trip-collector
+        part: trip-collector-proxy
+    spec:
+      containers:
+      - name: trip-collector-proxy
+        image: hantonsen/trip-collector-proxy
+        ports:
+        - containerPort: 1234
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: trip-collector-proxy
+  labels:
+    app: trip-collector
+    part: trip-collector-proxy
+spec:
+  type: ClusterIP
+  selector:
+    part: trip-collector-proxy
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
