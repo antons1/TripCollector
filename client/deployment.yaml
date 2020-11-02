@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: trip-collector-frontend
+  labels:
+    app: trip-collector
+    part: trip-collector-frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: trip-collector
+      part: trip-collector-frontend
+  template:
+    metadata:
+      labels:
+        app: trip-collector
+        part: trip-collector-frontend
+    spec:
+      containers:
+      - name: trip-collector-frontend
+        image: hantonsen/trip-collector-frontend
+        ports:
+        - containerPort: 1234
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: trip-collector-frontend
+  labels:
+    app: trip-collector
+    part: trip-collector-frontend
+spec:
+  selector:
+    part: trip-collector-frontend
+  ports:
+    - protocol: TCP
+      port: 1234
+      targetPort: 1234
