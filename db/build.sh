@@ -2,4 +2,4 @@
 
 source ./settings.sh
 
-docker rm -f $NAME
+docker build . -t $PREFIX/$NAME

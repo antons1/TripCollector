@@ -1,5 +1,6 @@
 #!/bin/bash
 
-lein uberjar
-docker build . -t hantonsen/trip-collector.backend
+source ./settings.sh
 
+lein uberjar
+docker build . -t $PREFIX/$NAME

@@ -1,3 +1,5 @@
 #! /bin/bash
 
-docker rm -f trip-collector.db
+source ./settings.sh
+
+docker rm -f $NAME
