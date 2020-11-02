@@ -13,8 +13,8 @@
       (content-type "application/json")))
 
 (defroutes app-routes
-           (GET "/" [] "Hello World")
-           (GET "/articles" [] (-> (articles) first (dissoc :_id) (api-response)))
+           (context "/api" []
+             (GET "/articles" [] (-> (articles) first (dissoc :_id) (api-response))))
            (route/not-found "Not Found"))
 
 (def app

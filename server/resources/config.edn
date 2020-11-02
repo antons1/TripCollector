@@ -1,0 +1,5 @@
+{:db-string #join ["mongodb://"
+                   #profile {:default "trip-collector-db" :dev "localhost"}
+                   ":"
+                   #profile {:default 27018}
+                   "/local"]}
