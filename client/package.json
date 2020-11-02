@@ -6,13 +6,16 @@
   "scripts": {
     "start": "parcel ./index.html",
     "build": "parcel build ./index.html",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:docker": "docker build . -t hantonsen/trip-collector-frontend",
+    "run:docker": "docker run -itd --name trip-collector-frontend --network trip-collector-network -p 1234:1234 hantonsen/trip-collector-frontend",
+    "rm:docker": "docker rm -f trip-collector-frontend"
   },
   "author": "Håkon Antonsen <haakon@antons1.net>",
   "license": "ISC",
   "dependencies": {
     "@babel/runtime": "^7.10.2",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.20",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "uuid": "^8.1.0"
