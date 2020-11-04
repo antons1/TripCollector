@@ -1,20 +1,33 @@
 (ns trip-collector.routes
   (:require [compojure.core :refer :all]
             [compojure.route :as route]
-            [ring.middleware.defaults :refer [wrap-defaults site-defaults]]
+            [ring.middleware.defaults :refer [wrap-defaults api-defaults]]
             [ring.middleware.json :refer [wrap-json-body wrap-json-response]]
-            [ring.util.response :refer [response content-type]]
+            [ring.util.response :as ring-response :refer [response content-type]]
             [jumblerg.middleware.cors :refer [wrap-cors]]
-            [trip-collector.db :refer [articles]]))
+            [trip-collector.db :refer [trips insert-trip!]]
+            [trip-collector.trips :refer [create-trip]])
+  (:import (clojure.lang ExceptionInfo)))
 
-(defn api-response [body]
-  (-> body
-      (response)
-      (content-type "application/json")))
+(defn api-response
+  ([body]
+   (api-response body 200))
+  ([body status]
+   (-> body
+       (response)
+       (content-type "application/json")
+       (ring-response/status status))))
 
 (defroutes app-routes
            (context "/api" []
-             (GET "/articles" [] (-> (articles) first (dissoc :_id) (api-response))))
+             (GET "/trips" [] (->> (trips) (api-response)))
+             (POST "/trips/create" {json :body}
+               (try
+                 (as-> json $
+                     (create-trip $)
+                     (insert-trip! $)
+                     (api-response $))
+                 (catch ExceptionInfo e (if (:problem (ex-data e)) (api-response (ex-data e) 400) (throw e))))))
            (route/not-found "Not Found"))
 
 (def app
@@ -22,4 +35,7 @@
       (wrap-json-response)
       (wrap-json-body {:keywords? true})
       (wrap-cors #".*")
-      (wrap-defaults site-defaults)))
+      (wrap-defaults api-defaults)))
+
+(comment
+  (->> (trips) (map #(dissoc % :_id))))

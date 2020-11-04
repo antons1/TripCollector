@@ -6,27 +6,27 @@
 (defonce connection (atom nil))
 (defonce database (atom nil))
 
-(defn articles []
-  (mc/find-maps @database "documents"))
-
-(defn assert-data! [call]
-  (if (empty? (call))
-    (mc/insert @database "documents" {:title "En Dag ved Vesletjern" :author "Håkon Antonsen"}))
-  call)
-
 (defn connection! []
   (let [{:keys [conn db]} (mg/connect-via-uri (:db-string (config)))]
     (reset! connection conn)
-    (reset! database db)
-    (assert-data! articles)))
+    (reset! database db)))
 
 (defn disconnect! []
   (mg/disconnect @connection))
 
+(defn trips []
+  (mc/find-maps @database "trips"))
+
+(defn insert-trip! [trip]
+  (mc/insert-and-return @database "trips"
+                        (merge
+                          {:_id (java.util.UUID/randomUUID)}
+                          trip)))
+
 (comment
-  (articles)
-  (assert-data! articles)
-  (empty? (articles))
+  (trips)
+  (empty? (trips))
   (connection!)
   (disconnect!)
-  @connection)
+  @connection
+  (insert-trip! { :author "Håkon Antonsen"}))

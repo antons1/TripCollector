@@ -2,6 +2,6 @@
 
 source ../settings.sh
 
-PORT=80
+PORT=27018
 NAME=$APP-db
 NETWORK=$APP-network
