@@ -5,7 +5,7 @@
             [ring.middleware.json :refer [wrap-json-body wrap-json-response]]
             [ring.util.response :as ring-response :refer [response content-type]]
             [jumblerg.middleware.cors :refer [wrap-cors]]
-            [trip-collector.db :refer [trips insert-trip!]]
+            [trip-collector.db :refer [trip trips insert-trip!]]
             [trip-collector.trips :refer [create-trip]])
   (:import (clojure.lang ExceptionInfo)))
 
@@ -20,14 +20,19 @@
 
 (defroutes app-routes
            (context "/api" []
-             (GET "/trips" [] (->> (trips) (api-response)))
-             (POST "/trips/create" {json :body}
-               (try
-                 (as-> json $
-                     (create-trip $)
-                     (insert-trip! $)
-                     (api-response $))
-                 (catch ExceptionInfo e (if (:problem (ex-data e)) (api-response (ex-data e) 400) (throw e))))))
+             (context "/trips" []
+               (GET "/" [] (->> (trips) (api-response)))
+               (GET "/:id" [id]
+                 (if-let [trip (trip id)]
+                   (api-response trip)
+                   (api-response {} 404)))
+               (POST "/create" {json :body}
+                 (try
+                   (-> json
+                         (create-trip)
+                         (insert-trip!)
+                         (api-response))
+                   (catch ExceptionInfo e (if (:problem (ex-data e)) (api-response (ex-data e) 400) (throw e)))))))
            (route/not-found "Not Found"))
 
 (def app

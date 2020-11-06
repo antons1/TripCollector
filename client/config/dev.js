@@ -1,6 +1,6 @@
 export const config = {
     backend: {
         host: "localhost",
-        port: 80
+        port: 3000
     }
 }

@@ -1,7 +1,8 @@
 (ns trip-collector.db
   (:require [monger.core :as mg]
             [monger.collection :as mc]
-            [trip-collector.config :refer [config]]))
+            [trip-collector.config :refer [config]])
+  (:import (java.util UUID)))
 
 (defonce connection (atom nil))
 (defonce database (atom nil))
@@ -20,8 +21,10 @@
 (defn insert-trip! [trip]
   (mc/insert-and-return @database "trips"
                         (merge
-                          {:_id (java.util.UUID/randomUUID)}
+                          {:_id (UUID/randomUUID)}
                           trip)))
+(defn trip [id]
+  (mc/find-map-by-id @database "trips" (UUID/fromString id)))
 
 (comment
   (trips)
@@ -29,4 +32,5 @@
   (connection!)
   (disconnect!)
   @connection
+  (trip "b65e05ac-6ac4-4c21-a904-c6deddc36ae2")
   (insert-trip! { :author "Håkon Antonsen"}))
