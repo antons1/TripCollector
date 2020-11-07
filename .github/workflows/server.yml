@@ -9,8 +9,10 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-18.04
+    env:
+      REGISTRY: registry.mk8s.lanodispenser.no:20443
+      APP: trip-colletor-backend
 
     steps:
     - uses: actions/checkout@v2
@@ -23,3 +25,18 @@ jobs:
     - name: Build
       working-directory: server
       run: lein uberjar
+    - name: Set SHA
+      id: vars
+      run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+    - name: Build image
+      working-directory: server
+      run: docker build . -t $REGISTRY/$APP
+    - name: Tag image
+      working-directory: server
+      run: docker tag $REGISTRY/$APP $REGISTRY/$APP:${{ steps.vars.outputs.sha_short }}
+    - name: Push sha
+      working-directory: server
+      run: docker push $REGISTRY/$APP:${{ steps.vars.outputs.sha_short }}
+    - name: Push latest
+      working-directory: server
+      run: docker push $REGISTRY/$APP:latest
