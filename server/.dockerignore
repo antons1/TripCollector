@@ -1,0 +1,8 @@
+target
+.lein-failures
+.nrepl-port
+trip-collector.iml
+.idea
+*.sh
+deployment.yaml
+.dockerignore

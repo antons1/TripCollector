@@ -31,6 +31,6 @@ jobs:
     - uses: Azure/k8s-deploy@v1
       with:
         manifests: |
-          kratos/deployment.yaml
+          server/deployment.yaml
         images: |
           registry.mk8s.lanodispenser.no/trip-collector-backend:${{ steps.vars.outputs.sha_short }}

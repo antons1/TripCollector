@@ -31,4 +31,5 @@
                          :to     "2020-10-04T00:00:00.00Z"
                          :title  "En Dag Ved Vesletjern"})
        (catch Exception e (ex-data e)))
-  (assert-date-after "2020-10-03T00:00:00.00Z" "2020-10-04T00:00:00.00Z"))
+  (assert-date-after "2020-10-03T00:00:00.00Z" "2020-10-04T00:00:00.00Z")
+  (s/gen ::trip))
