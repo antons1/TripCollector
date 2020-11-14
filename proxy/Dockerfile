@@ -1,2 +1,3 @@
-FROM nginx:1.19
-COPY ./nginx.conf /etc/nginx/conf.d/default.conf
+FROM oryd/oathkeeper:v0.38.4-beta.1
+COPY ./oathkeeper.yaml /.oathkeeper.yaml
+COPY ./access_rules.json /access_rules.json

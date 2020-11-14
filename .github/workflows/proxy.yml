@@ -1,0 +1,36 @@
+name: Proxy CI/CD
+
+on:
+  push:
+    branches: [ master ]
+    paths:
+    - "proxy/**"
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      REGISTRY: registry.mk8s.lanodispenser.no
+      APP: trip-collector-proxy
+    steps:
+    - uses: actions/checkout@master
+    - name: Set SHA
+      id: vars
+      run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+
+    - working-directory: proxy
+      run: |
+        docker build . -t $REGISTRY/$APP:${{ steps.vars.outputs.sha_short }}
+        docker push $REGISTRY/$APP:${{ steps.vars.outputs.sha_short }}
+      
+    - uses: Azure/k8s-set-context@v1
+      with:
+        kubeconfig: ${{ secrets.KUBE_CONFIG }}
+
+    - uses: Azure/k8s-deploy@v1
+      with:
+        manifests: |
+          proxy/deployment.yaml
+        images: |
+          registry.mk8s.lanodispenser.no/trip-collector-proxy:${{ steps.vars.outputs.sha_short }}

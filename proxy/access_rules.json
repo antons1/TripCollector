@@ -1,0 +1,67 @@
+[
+    {
+        "id": "trip-collector:frontend",
+        "upstream": {
+            "preserve_host": false,
+            "url": "http://trip-collector-frontend:1234/"
+        },
+        "match": {
+            "url": "<https?:\/\/trip-collector.lanodispenser.no(:[123456789]{2,5})?((?!\/api).*)*>",
+            "methods": [
+                "GET"
+            ]
+        },
+        "authenticators": [
+            {
+                "handler": "anonymous"
+            }
+        ],
+        "authorizer": {
+            "handler": "allow"
+        },
+        "mutators": [
+            {
+                "handler": "noop"
+            }
+        ]
+    },
+    {
+        "id": "trip-collector:backend",
+        "upstream": {
+            "preserve_host": false,
+            "url": "http://trip-collector-backend:3000/"
+        },
+        "match": {
+            "url": "<https?:\/\/trip-collector.lanodispenser.no(:[123456789]{2,5})?\/?api\/?(.*)*>",
+            "methods": [
+                "GET",
+                "POST",
+                "PUT",
+                "DELETE",
+                "HEAD",
+                "OPTIONS"
+            ]
+        },
+        "authenticators": [
+            {
+                "handler": "cookie_session"
+            }
+        ],
+        "authorizer": {
+            "handler": "allow"
+        },
+        "mutators": [
+            {
+                "handler": "noop"
+            }
+        ],
+        "errors": [
+            {
+                "handler": "redirect",
+                "config": {
+                    "to": "https://identity.lanodispenser.no/auth/login"
+                }
+            }
+        ]
+    }
+]

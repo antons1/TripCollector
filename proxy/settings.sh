@@ -2,6 +2,6 @@
 
 source ../settings.sh
 
-PORT=80
+PORT=4455
 NAME=$APP-proxy
 NETWORK=$APP-network

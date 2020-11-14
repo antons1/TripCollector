@@ -1,0 +1,79 @@
+log:
+  level: debug
+  format: json
+
+serve:
+  proxy:
+    port: 4455
+    cors:
+      enabled: true
+      allowed_origins:
+        - https://*.lanodispenser.no/
+        - https://*.lanodispenser.no
+        - https://lanodispenser.no
+        - https://local.lanodispenser.no:4455
+        - https://local.lanodispenser.no:1234
+      allowed_methods:
+        - POST
+        - GET
+        - PUT
+        - PATCH
+        - DELETE
+      allowed_headers:
+        - "*"
+      exposed_headers:
+        - "*"
+      allow_credentials: true
+
+errors:
+  fallback:
+    - json
+
+  handlers:
+    redirect:
+      enabled: true
+      config:
+        to: https://identity.lanodispenser.no/auth/login
+        when:
+          -
+            error:
+              - unauthorized
+              - forbidden
+            request:
+              header:
+                accept:
+                  - text/html
+    json:
+      enabled: true
+      config:
+        verbose: true
+
+access_rules:
+  matching_strategy: regexp
+  repositories:
+    - file:///access_rules.json
+
+authenticators:
+  cookie_session:
+    enabled: true
+    config:
+      check_session_url: https://identity.lanodispenser.no/api/sessions/whoami
+      preserve_path: true
+      extra_from: "@this"
+      subject_from: "identity.id"
+      only:
+        - ory_kratos_session
+
+  noop:
+    enabled: true
+
+  anonymous:
+    enabled: true
+
+authorizers:
+  allow:
+    enabled: true
+
+mutators:
+  noop:
+    enabled: true
