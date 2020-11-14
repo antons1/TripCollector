@@ -7,14 +7,14 @@ export function TripList({ }) {
 
     React.useEffect(() => {
         fetch(`//${api.hostname()}/api/trips`).then((res) => {
-            if(res.ok) res.json().then(setTrips);
+            if(res.status === 200) res.json().then(setTrips);
             else res.json()
         }).then((res) => console.log(res)).catch((err) => console.log(err))
     }, [])
 
     return (
         <div>
-            {trips.map(({ _id, title, author, from, to }) =>
+            {trips && trips.map && trips.map(({ _id, title, author, from, to }) =>
                 <div key={_id}>
                     <h2>{title}</h2>
                     <pre>Av {author} ({_id})</pre>
