@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "parcel ./index.html",
+    "start": "parcel --https ./index.html",
     "build": "parcel build ./index.html",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build:docker": "docker build . -t hantonsen/trip-collector-frontend",

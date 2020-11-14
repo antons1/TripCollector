@@ -1,0 +1,34 @@
+on:
+  push:
+    branches: [ master ]
+    paths:
+    - "client/**"
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      REGISTRY: registry.mk8s.lanodispenser.no
+      APP: trip-collector-frontend
+    steps:
+    - uses: actions/checkout@master
+    - name: Set SHA
+      id: vars
+      run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+
+    - working-directory: kratos
+      run: |
+        docker build . -t $REGISTRY/$APP:${{ steps.vars.outputs.sha_short }}
+        docker push $REGISTRY/$APP:${{ steps.vars.outputs.sha_short }}
+      
+    - uses: Azure/k8s-set-context@v1
+      with:
+        kubeconfig: ${{ secrets.KUBE_CONFIG }}
+
+    - uses: Azure/k8s-deploy@v1
+      with:
+        manifests: |
+          kratos/deployment.yaml
+        images: |
+          registry.mk8s.lanodispenser.no/trip-collector-frontend:${{ steps.vars.outputs.sha_short }}

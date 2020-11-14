@@ -1,6 +1,6 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { config } from '../config/config';
+import api from '../api/api';
 
 export function Trip({}) {
     const { tripId } = useParams()
@@ -14,7 +14,7 @@ export function Trip({}) {
         setLoading(true);
         setTrip({});
 
-        fetch(`//${config().backend.host}:${config().backend.port}/api/trips/${tripId}`)
+        fetch(`//${api.hostname()}/api/trips/${tripId}`)
             .then((res) => res.json())
             .then((res) => {
                 setLoading(false);

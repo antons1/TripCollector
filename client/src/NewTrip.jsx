@@ -1,6 +1,6 @@
 import React from 'react';
+import api from '../api/api';
 
-import { config } from "../config/config";
 
 const initialState = {
     title: "",
@@ -36,7 +36,7 @@ export const NewTrip = ({ }) => {
         setSending(true);
         settripId(null);
 
-        fetch(`//${config().backend.host}:${config().backend.port}/api/trips/create`, {
+        fetch(`//${api.hostname()}/api/trips/create`, {
             method: "POST",
             body: JSON.stringify(art, null, 2),
             headers: { "Content-Type": "application/json" }

@@ -1,12 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { config } from '../config/config';
+import api from '../api/api';
 
 export function TripList({ }) {
     const [trips, setTrips] = React.useState([]);
 
     React.useEffect(() => {
-        fetch(`//${config().backend.host}:${config().backend.port}/api/trips`).then((res) => res.json()).then(setTrips).catch((err) => console.log(err))
+        fetch(`//${api.hostname()}/api/trips`).then((res) => {
+            if(res.ok) res.json().then(setTrips);
+            else res.json()
+        }).then((res) => console.log(res)).catch((err) => console.log(err))
     }, [])
 
     return (
