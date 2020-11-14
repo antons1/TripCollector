@@ -1,3 +1,5 @@
+name: Client CI/CD
+
 on:
   push:
     branches: [ master ]

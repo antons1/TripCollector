@@ -1,42 +1,36 @@
-name: Server CI
+name: Server CI/CD
 
 on:
   push:
     branches: [ master ]
-  pull_request:
-    branches: [ master ]
+    paths:
+    - "server/**"
   workflow_dispatch:
 
 jobs:
   build:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     env:
-      REGISTRY: registry.mk8s.lanodispenser.no:20443
+      REGISTRY: registry.mk8s.lanodispenser.no
       APP: trip-collector-backend
-
     steps:
-    - uses: actions/checkout@v2
-    - name: Install dependencies
-      working-directory: server
-      run: lein deps
-    - name: Run tests
-      working-directory: server
-      run: lein test
-    - name: Build
-      working-directory: server
-      run: lein uberjar
+    - uses: actions/checkout@master
     - name: Set SHA
       id: vars
       run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
-    - name: Build image
-      working-directory: server
-      run: docker build . -t $REGISTRY/$APP
-    - name: Tag image
-      working-directory: server
-      run: docker tag $REGISTRY/$APP $REGISTRY/$APP:${{ steps.vars.outputs.sha_short }}
-    - name: Push sha
-      working-directory: server
-      run: docker push $REGISTRY/$APP:${{ steps.vars.outputs.sha_short }}
-    - name: Push latest
-      working-directory: server
-      run: docker push $REGISTRY/$APP:latest
+
+    - working-directory: kratos
+      run: |
+        docker build . -t $REGISTRY/$APP:${{ steps.vars.outputs.sha_short }}
+        docker push $REGISTRY/$APP:${{ steps.vars.outputs.sha_short }}
+      
+    - uses: Azure/k8s-set-context@v1
+      with:
+        kubeconfig: ${{ secrets.KUBE_CONFIG }}
+
+    - uses: Azure/k8s-deploy@v1
+      with:
+        manifests: |
+          kratos/deployment.yaml
+        images: |
+          registry.mk8s.lanodispenser.no/trip-collector-backend:${{ steps.vars.outputs.sha_short }}
