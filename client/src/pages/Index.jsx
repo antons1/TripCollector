@@ -3,9 +3,9 @@ import { Heading } from '../components/Heading';
 import { Image } from '../components/Image';
 import { Content } from '../components/layout/Content';
 
-import img1 from './images/1.jpg';
-import img2 from './images/2.jpg';
-import img3 from './images/3.jpg';
+import img1 from './images/1w.jpg';
+import img2 from './images/2w.jpg';
+import img3 from './images/3w.jpg';
 
 export function Index({ }) {
     return (
