@@ -1,5 +1,7 @@
 import React from 'react';
 import api from '../../api/api';
+import { Heading } from '../components/Heading';
+import { Content } from '../components/layout/Content';
 import { useAuthentication } from '../hooks/useAuthentication';
 
 
@@ -54,7 +56,9 @@ export const NewTrip = ({ }) => {
     }
 
     return (
-        <>
+        <Content>
+            <Heading level={2}>Lag ny tur</Heading>
+            <br />
             <form>
                 {tripId && <div>Lagret artikkel med id {tripId}</div>}
                 {sError && <div>Det oppstod en feil ved lagring: {sError.message}</div>}
@@ -77,5 +81,5 @@ export const NewTrip = ({ }) => {
                 </label>
                 <input type="submit" value="Lagre" onClick={submit} disabled={sending} />
             </form>
-        </>);
+        </Content>);
 }
