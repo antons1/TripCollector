@@ -1,5 +1,6 @@
 import React from 'react';
-import api from '../api/api';
+import api from '../../api/api';
+import { useAuthentication } from '../hooks/useAuthentication';
 
 
 const initialState = {
@@ -20,6 +21,7 @@ function reducer(state, action) {
 }
 
 export const NewTrip = ({ }) => {
+    const { authenticated, loading } = useAuthentication(true);
     const [state, dispatch] = React.useReducer(reducer, initialState);
     const [sending, setSending] = React.useState(false);
     const [sError, setSError] = React.useState(null);
